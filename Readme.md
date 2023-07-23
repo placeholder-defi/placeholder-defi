@@ -25,7 +25,7 @@ https://github.com/placeholder-defi/placeholder-defi/blob/1a7033afe61c835760ab70
 
 Vault asset we are using chainlink price feed.
 
-#### Vault assemanger  trade is in progress
+#### Vault asset manager  trade is in progress
 In the case where a trade is in progress the investor can not deposit but can program its deposit through  ChainLink keeper which will deposit for the user once the trade will be closed.
 
 Moreover the users are able to program an automatic withdraw with ChainLink keeper .
