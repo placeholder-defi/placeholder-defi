@@ -26,12 +26,15 @@ https://github.com/placeholder-defi/placeholder-defi/blob/1a7033afe61c835760ab70
 ## ChainLink
 
 Vault asset we are using chainlink price feed.
+Price oracel : https://github.com/placeholder-defi/placeholder-defi/blob/main/contract/contracts/oracle/PriceOracle.sol (PriceOracle - 0xa952E2bA9a7f73F8B0c7FE9Fda64227b6Bed1117
+)
+https://github.com/placeholder-defi/placeholder-defi/blob/65bd81592599c5ffbd6311f21e141e763336f962/contract/contracts/ShortTermFund.sol#L290
 
 #### Vault asset manager  trade is in progress
 In the case where a trade is in progress the investor can not deposit but can program its deposit through  ChainLink keeper which will deposit for the user once the trade will be closed.
 
 Moreover the users are able to program an automatic withdraw with ChainLink keeper .
-
+https://github.com/placeholder-defi/placeholder-defi/blob/65bd81592599c5ffbd6311f21e141e763336f962/contract/contracts/ShortTermFund.sol#L15
 https://github.com/placeholder-defi/placeholder-defi/blob/1a7033afe61c835760ab70147b55d09ebff240aa/contract/contracts/VelvetShortTermFund.sol#L206
 
 
