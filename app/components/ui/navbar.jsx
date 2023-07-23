@@ -19,7 +19,7 @@ export function Navbar() {
         </div>
       </div>
       <div className="navbar-center">
-        <a className="btn btn-ghost normal-case text-xl text-left" href="/">Velvet Derivat</a>
+        <a className="btn btn-ghost normal-case text-xl text-left" href="/">PlaceHolder</a>
       </div>
       <div className="navbar-end">
        <button onClick={() => open()}>Connect</button>
