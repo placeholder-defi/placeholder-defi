@@ -8,9 +8,9 @@ import {
   PriceOracle,
   IERC20__factory,
   ERC20,
-  VelvetSafeModule,
+  SafeModule,
   Factory,
-  VelvetShortTermFund__factory
+  ShortTermFund__factory
 } from "../typechain";
 import { chainIdToAddresses } from "./networkVariables";
 // let fs = require("fs");
@@ -53,20 +53,21 @@ async function main() {
   await delay(15000);
   console.log("Waited 5s");
 
-  let velvetSafeModule: VelvetSafeModule;
+  let velvetSafeModule: SafeModule;
 
-  const VelvetSafeModule = await ethers.getContractFactory("VelvetSafeModule");
+  const VelvetSafeModule = await ethers.getContractFactory("SafeModule");
   velvetSafeModule = await VelvetSafeModule.deploy();
   await velvetSafeModule.deployed();
 
-  const IndexFactory = await ethers.getContractFactory("Factory");
+  const IndexFactory = await ethers.getContractFactory("FactoryPlogon");
   const indexFactory = await IndexFactory.deploy(
     priceOracle.address,
     addresses.gnosisSingleton,
     addresses.gnosisFallbackLibrary,
     addresses.gnosisMultisendLibrary,
     addresses.gnosisSafeProxyFactory,
-    velvetSafeModule.address
+    velvetSafeModule.address,
+    addresses.postionRoter
   )
   
 

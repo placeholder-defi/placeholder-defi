@@ -8,8 +8,7 @@ import {SafeMath} from "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./interfaces/IPriceOracle.sol";
 import {TransferHelper} from "@uniswap/lib/contracts/libraries/TransferHelper.sol";
 import {ISafeModule} from "./vault/ISafeModule.sol";
-import "./interfaces/IPositionRouter.sol";
-import "./interfaces/IRouter.sol";
+import "./interfaces/IGNSTrading.sol";
 import "./IOneInchHandler.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 
@@ -25,8 +24,7 @@ contract ShortTermFundPolygon is Initializable, ERC20Upgradeable {
     uint256 private lastUpKeep;
     IPriceOracle private oracle;
     ISafeModule private safe;
-    IPositionRouter private positionRouter;
-    IRouter private router;
+    IGNSTrading private positionRouter;
 
     address public trader;
 
@@ -57,7 +55,6 @@ contract ShortTermFundPolygon is Initializable, ERC20Upgradeable {
         address _trader,
         address _oracle,
         address _investmentToken,
-        address _router,
         address _positionRouter,
         uint256 _fee
     ) external initializer {
@@ -76,8 +73,7 @@ contract ShortTermFundPolygon is Initializable, ERC20Upgradeable {
         vault = _vault;
         safe = ISafeModule(_module);
         oracle = IPriceOracle(_oracle);
-        router = IRouter(_router);
-        positionRouter = IPositionRouter(_positionRouter);
+        positionRouter = IGNSTrading(_positionRouter);
         fee = _fee;
         trader = _trader;
         index = address(this);

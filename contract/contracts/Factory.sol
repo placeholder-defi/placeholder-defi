@@ -1,25 +1,31 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 import "@openzeppelin/contracts/access/Ownable.sol";
-import {GnosisDeployer} from "contracts/library/GnosisDeployer.sol";
-import {IVelvetSafeModule} from "./vault/IVelvetSafeModule.sol";
-import "./VelvetShortTermFund.sol";
+import {GnosisDeployer} from "./library/GnosisDeployer.sol";
+import {ISafeModule} from "./vault/ISafeModule.sol";
+import "./ShortTermFund.sol";
+import "./IShortTermFund.sol";
 
 contract Factory is Ownable {
     address internal oracle;
-    address public gnosisSingleton;
-    address public gnosisFallbackLibrary;
-    address public gnosisMultisendLibrary;
-    address public gnosisSafeProxyFactory;
+    address internal gnosisSingleton;
+    address internal gnosisFallbackLibrary;
+    address internal gnosisMultisendLibrary;
+    address internal gnosisSafeProxyFactory;
     address internal baseVelvetGnosisSafeModuleAddress;
+    address internal router;
+    address internal positionRouter;
 
-    struct FundInfo{
+    struct FundInfo {
         address shortTermFund;
+        string stratergyName;
+        string stratergysymbol;
+        address owner;
     }
 
     FundInfo[] public FundInfolList;
 
-    event VaultCreated(address vault,address indexed trade);
+    event VaultCreated(address vault, address indexed trade);
 
     constructor(
         address _oracle,
@@ -27,7 +33,9 @@ contract Factory is Ownable {
         address _gnosisFallbackLibrary,
         address _gnosisMultisendLibrary,
         address _gnosisSafeProxyFactory,
-        address _baseVelvetGnosisSafeModuleAddress
+        address _baseVelvetGnosisSafeModuleAddress,
+        address _router,
+        address _positionRouter
     ) {
         oracle = _oracle;
         gnosisSingleton = _gnosisSingleton;
@@ -35,31 +43,27 @@ contract Factory is Ownable {
         gnosisMultisendLibrary = _gnosisMultisendLibrary;
         gnosisSafeProxyFactory = _gnosisSafeProxyFactory;
         baseVelvetGnosisSafeModuleAddress = _baseVelvetGnosisSafeModuleAddress;
+        router = _router;
+        positionRouter = _positionRouter;
+        
     }
 
     function createCustodialVault(
         string memory _stratergyName,
         string memory _stratergySymbol,
         address _investmentToken,
-        uint256 _fee,
-        address[] memory _owners,
-        uint256 _threshold
-    ) external returns (address) {
-        require(_owners.length > 0, "Owners length should be grater then zero");
-        require(
-            _threshold <= _owners.length && _threshold > 0,
-            "Invalid Threshold Length"
+        uint256 _fee
+    ) external {
+        address[] memory _owner = new address[](1);
+        _owner[0] = msg.sender;
+        _createVault(
+            _stratergyName,
+            _stratergySymbol,
+            _investmentToken,
+            _fee,
+            _owner,
+            1
         );
-        return
-            _createVault(
-                _stratergyName,
-                _stratergySymbol,
-                _investmentToken,
-                _fee,
-                true,
-                _owners,
-                _threshold
-            );
     }
 
     function createNonCustodialVault(
@@ -67,19 +71,17 @@ contract Factory is Ownable {
         string memory _stratergySymbol,
         address _investmentToken,
         uint256 _fee
-    ) external returns (address) {
+    ) external {
         address[] memory _owner = new address[](1);
-        _owner[0] = address(0x0000000000000000000000000000000000000000);
-        return
-            _createVault(
-                _stratergyName,
-                _stratergySymbol,
-                _investmentToken,
-                _fee,
-                false,
-                _owner,
-                1
-            );
+        _owner[0] = msg.sender;
+        _createVault(
+            _stratergyName,
+            _stratergySymbol,
+            _investmentToken,
+            _fee,
+            _owner,
+            1
+        );
     }
 
     function _createVault(
@@ -87,16 +89,11 @@ contract Factory is Ownable {
         string memory _stratergySymbol,
         address _investmentToken,
         uint256 _fee,
-        bool _custodial,
         address[] memory _owner,
         uint256 _threshold
-    ) internal returns (address) {
+    ) internal {
         address vaultAddress;
         address module;
-        if (!_custodial) {
-            _owner[0] = msg.sender;
-            _threshold = 1;
-        }
         (vaultAddress, module) = GnosisDeployer.deployGnosisSafeAndModule(
             gnosisSingleton,
             gnosisSafeProxyFactory,
@@ -106,30 +103,38 @@ contract Factory is Ownable {
             _owner,
             _threshold
         );
-        VelvetShortTermFund velvetFundContract = new VelvetShortTermFund(
-            _stratergyName,
-            _stratergySymbol,
-            vaultAddress,
-            module,
-            msg.sender,
-            oracle,
-            _investmentToken,
-            _fee
-        );
-        IVelvetSafeModule(address(module)).setUp(
+        ShortTermFund shortTermFund = new ShortTermFund(_stratergyName,
+                _stratergySymbol,
+                vaultAddress,
+                module,
+                msg.sender,
+                oracle,
+                _investmentToken,
+                router,
+                positionRouter,
+                _fee); 
+        ISafeModule(address(module)).setUp(
             abi.encode(
                 vaultAddress,
-                address(velvetFundContract),
+                address(shortTermFund),
                 address(gnosisMultisendLibrary)
             )
         );
 
-        FundInfolList.push(FundInfo(address(velvetFundContract)));
-        emit VaultCreated(address(velvetFundContract),msg.sender);
-        return address(velvetFundContract);
+        FundInfolList.push(
+            FundInfo(
+                address(shortTermFund),
+                _stratergyName,
+                _stratergySymbol,
+                msg.sender
+            )
+        );
+        emit VaultCreated(address(shortTermFund), msg.sender);
     }
 
-    function getFundList(uint256 fundId) external view virtual returns (address) {
-    return address(FundInfolList[fundId].shortTermFund);
-  }
+    function getFundList(
+        uint256 fundId
+    ) external view virtual returns (address) {
+        return address(FundInfolList[fundId].shortTermFund);
+    }
 }

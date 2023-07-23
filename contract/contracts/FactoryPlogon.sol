@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 import "@openzeppelin/contracts/access/Ownable.sol";
-import {GnosisDeployer} from "contracts/library/GnosisDeployer.sol";
+import {GnosisDeployer} from "./library/GnosisDeployer.sol";
 import {ISafeModule} from "./vault/ISafeModule.sol";
-import "./ShortTermFund.sol";
-import "./IShortTermFund.sol";
+import "./ShortTermFundPolygon.sol";
 
-contract Factory is Ownable {
+contract FactoryPlogon is Ownable {
     address internal oracle;
     address internal gnosisSingleton;
     address internal gnosisFallbackLibrary;
@@ -34,7 +33,6 @@ contract Factory is Ownable {
         address _gnosisMultisendLibrary,
         address _gnosisSafeProxyFactory,
         address _baseVelvetGnosisSafeModuleAddress,
-        address _router,
         address _positionRouter
     ) {
         oracle = _oracle;
@@ -43,7 +41,6 @@ contract Factory is Ownable {
         gnosisMultisendLibrary = _gnosisMultisendLibrary;
         gnosisSafeProxyFactory = _gnosisSafeProxyFactory;
         baseVelvetGnosisSafeModuleAddress = _baseVelvetGnosisSafeModuleAddress;
-        router = _router;
         positionRouter = _positionRouter;
         
     }
@@ -103,14 +100,13 @@ contract Factory is Ownable {
             _owner,
             _threshold
         );
-        ShortTermFund shortTermFund = new ShortTermFund(_stratergyName,
+        ShortTermFundPolygon shortTermFund = new ShortTermFundPolygon(_stratergyName,
                 _stratergySymbol,
                 vaultAddress,
                 module,
                 msg.sender,
                 oracle,
                 _investmentToken,
-                router,
                 positionRouter,
                 _fee); 
         ISafeModule(address(module)).setUp(

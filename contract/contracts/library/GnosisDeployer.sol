@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.16;
 
 import {GnosisSafe} from "@gnosis.pm/safe-contracts/contracts/GnosisSafe.sol";
 import {MultiSend} from "@gnosis.pm/safe-contracts/contracts/libraries/MultiSend.sol";
 import {Module} from "@gnosis.pm/zodiac/contracts/core/Module.sol";
 import {GnosisSafeProxyFactory} from "@gnosis.pm/safe-contracts/contracts/proxies/GnosisSafeProxyFactory.sol";
 
-import {IVelvetSafeModule} from "../vault/IVelvetSafeModule.sol";
+import {ISafeModule} from "../vault/ISafeModule.sol";
 import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
-import {VelvetSafeModule} from "../vault/VelvetSafeModule.sol";
+import {SafeModule} from "../vault/SafeModule.sol";
 
 library GnosisDeployer {
     /**
@@ -37,7 +37,7 @@ library GnosisDeployer {
                 gnosisSafeProxyFactory.createProxy(_gnosisSingleton, bytes(""))
             )
         );
-        VelvetSafeModule _gnosisModule = VelvetSafeModule(
+        SafeModule _gnosisModule = SafeModule(
             Clones.clone(baseGnosisModule)
         );
         bytes memory _multisendAction = generateByteCode(

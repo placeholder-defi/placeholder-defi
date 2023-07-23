@@ -68,6 +68,12 @@ export const MaticMainNet: ChainAddresses = {
   QuickSwapV2FactoryAddress: "0x5757371414417b8c6caad45baef941abc7d3ab32",
   WETH_Address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
   DAI: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+  gnosisSingleton: "0x3E5c63644E683549055b9Be8653de26E0B4CD36E",
+  gnosisFallbackLibrary: "0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4",
+  gnosisMultisendLibrary: "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
+  gnosisSafeProxyFactory: "0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2",
+  moduleProxyFactory: "0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B",
+  postionRoter:"0x5C58A8acAc721928b6f4495370C10762795d83dA"
 };
 
 export const Arbitrum: ChainAddresses = {

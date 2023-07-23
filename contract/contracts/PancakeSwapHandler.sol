@@ -12,7 +12,7 @@
  *      4. Swap tokens for BNB
  */
 
-pragma solidity 0.8.17;
+pragma solidity ^0.8.16;
 
 import {IUniswapV2Router02} from "./interfaces/IUniswapV2Router02.sol";
 

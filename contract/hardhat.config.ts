@@ -1,19 +1,24 @@
 import { config as dotEnvConfig } from "dotenv";
 dotEnvConfig();
 import "@nomiclabs/hardhat-etherscan";
-import "@nomiclabs/hardhat-waffle";
+import "hardhat-gas-reporter";
 import "@nomiclabs/hardhat-ethers";
 import "@typechain/hardhat";
 import "@openzeppelin/hardhat-upgrades";
 import "hardhat-contract-sizer";
 import "solidity-coverage";
+import "hardhat-tracer";
+import "./tasks/accounts";
+import "./tasks/balance";
+import "./tasks/block-number";
+import "hardhat-gas-reporter";
+import "hardhat-abi-exporter";
 import "./tasks/accounts";
 import "./tasks/balance";
 import "./tasks/block-number";
 import "./tasks/deployIndexSwap";
 import "./tasks/setTokenIndexSwap";
 import "./tasks/createIndex";
-import "hardhat-tracer";
 
 import { HardhatUserConfig } from "hardhat/types";
 import { chainIdToAddresses } from "./scripts/networkVariables";
@@ -26,7 +31,6 @@ if (!mnemonic) {
 const infuraApiKey = process.env.INFURA_API_KEY;
 const privateKey = process.env.PRIVATE_KEY;
 const forkChainId: any = process.env.FORK_CHAINID;
-const rpcURL = process.env.RPC_URL;
 
 if (!infuraApiKey) {
   throw new Error("Please set your INFURA_API_KEY in a .env file");
@@ -43,10 +47,14 @@ const chainIds = {
   MaticTestnet: 80001,
   MaticMainnet: 137,
   ropsten: 3,
-  ArbitrumOne: 42161
 };
 
 const config: HardhatUserConfig = {
+  gasReporter: {
+    enabled: true,
+    currency: "ETH",
+    showTimeSpent: true,
+  },
   networks: {
     hardhat: {
       accounts: {
@@ -55,14 +63,14 @@ const config: HardhatUserConfig = {
       forking: {
         // eslint-disable-next-line
         enabled: true,
-        url: rpcURL,
+        url: process.env.BSC_RPC ? process.env.BSC_RPC : "https://bsc-dataseed.binance.org/",
       },
       chainId: forkChainId,
       // allowUnlimitedContractSize: true
     },
     ganache: {
       chainId: 5777,
-      url: "http://127.0.0.1:8545/",
+      url: "http://127.0.0.1:7545/",
     },
 
     mainnet: {
@@ -111,14 +119,11 @@ const config: HardhatUserConfig = {
       // chainId: chainIds["MaticTestnet"],
       chainId: 80001,
       allowUnlimitedContractSize: true,
-      url:
-        "https://speedy-nodes-nyc.moralis.io/" +
-        infuraApiKey +
-        "/polygon/mumbai",
+      url: "https://speedy-nodes-nyc.moralis.io/" + infuraApiKey + "/polygon/mumbai",
     },
     MaticMainnet: {
       accounts: {
-        initialIndex: 1,
+        initialIndex: 0,
         mnemonic,
         // path: "m/44'/60'/0'/0",
       },
@@ -136,16 +141,33 @@ const config: HardhatUserConfig = {
             enabled: true,
             runs: 200,
           },
-          viaIR: true
         },
       },
     ],
   },
   mocha: {
-    timeout: 200000,
+    timeout: 400000,
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
+  },
+  abiExporter: {
+    path: "./abi",
+    clear: true,
+    flat: true,
+    only: [
+      "IndexSwap",
+      "IndexFactory",
+      "Exchange",
+      "OffChainIndexSwap",
+      "PriceOracle",
+      "RebalanceAggregator",
+      "OffChainRebalance",
+      "Rebalancing",
+      "AssetManagerConfig",
+      "TokenRegistry",
+    ],
+    spacing: 2,
   },
 };
 
