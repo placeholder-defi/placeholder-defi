@@ -118,7 +118,7 @@ const config: HardhatUserConfig = {
     },
     MaticMainnet: {
       accounts: {
-        initialIndex: 0,
+        initialIndex: 1,
         mnemonic,
         // path: "m/44'/60'/0'/0",
       },

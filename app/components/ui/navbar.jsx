@@ -14,6 +14,7 @@ export function Navbar() {
           <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
             <li><a href="/">Homepage</a></li>
             <li><a href="/portfolio">Portfolio</a></li>
+            <li><a href="/walletList">All User</a></li>
             <li><a href="velvet.capital">About</a></li>
           </ul>
         </div>

@@ -173,15 +173,6 @@ const WalletList = () => {
           </tbody>
         </table>
       </div>
-         {/* Bar Chart
-         <div style={{ width: '30%', maxWidth: '400px' }}>
-          <h2>Bar Chart - Number of Wallets per App Type</h2>
-          <XYPlot height={300} width={300} xType="ordinal">
-            <VerticalBarSeries data={barChartData} />
-            <XAxis />
-            <YAxis />
-          </XYPlot>
-        </div>      */}
     </div>
      
   );

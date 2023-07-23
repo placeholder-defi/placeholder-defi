@@ -39,16 +39,16 @@ async function main() {
     "------------------------------ Initial Setup Ended ------------------------------"
   );
 
-  /*console.log("--------------- Contract Deployment Started ---------------");
-  const PriceOracle = await ethers.getContractFactory("PriceOracle");
-  const priceOracle = await PriceOracle.deploy();
-  await priceOracle.deployed();*/
-
   console.log("--------------- Contract Deployment Started ---------------");
   const PriceOracle = await ethers.getContractFactory("PriceOracle");
-  const priceOracle = await PriceOracle.attach(
-    "0xA812C7aCB1e6f41e7B4dE2d7CaF9F2fc176c6Bc7"
-  );
+  const priceOracle = await PriceOracle.deploy();
+  await priceOracle.deployed();
+
+  console.log("--------------- Contract Deployment Started ---------------");
+  // const PriceOracle = await ethers.getContractFactory("PriceOracle");
+  // const priceOracle = await PriceOracle.attach(
+  //   "0xA812C7aCB1e6f41e7B4dE2d7CaF9F2fc176c6Bc7"
+  // );
 
   await delay(15000);
   console.log("Waited 5s");

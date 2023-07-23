@@ -44,21 +44,21 @@ export function ChartIndex({ width, height }) {
       wickDownColor: 'rgba(255, 144, 0, 1)',
       wickUpColor: 'rgba(255, 144, 0, 1)',
     });
-
+    candleSeries.setData([]);
 // Fetch the data from the API
-     await fetch(apiUrl)
-      .then(response => response.json())
-      .then(data => {
-      // Format the data to match the candlestick format
-      const formattedData = data.map(item => {
-      return {
-      x: item[0], // Timestamp
-      y: [item[1], item[2], item[3], item[4]] // OHLC values
-      };
-      candleSeries.setData(formattedData);
-      });
+    //  await fetch(apiUrl)
+    //   .then(response => response.json())
+    //   .then(data => {
+    //   // Format the data to match the candlestick format
+    //   const formattedData = data.map(item => {
+    //   return {
+    //   x: item[0], // Timestamp
+    //   y: [item[1], item[2], item[3], item[4]] // OHLC values
+    //   };
+    //   candleSeries.setData(formattedData);
+    //   });
    
-
+      candleSeries.setData(formattedData);
     pass = true;
   }, []);
 
